@@ -4,9 +4,53 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Tagger"
+        xmlns:vm="clr-namespace:Tagger.ViewModel"
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
+    <Window.DataContext>
+        <vm:MainWindowsViewModel/>
+    </Window.DataContext>
+
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <Menu Grid.ColumnSpan="2">
+            <MenuItem Header="Open folder"
+                      Command="{Binding OpenFolderCommand}">
+            </MenuItem>
+        </Menu>
+
+        <StackPanel Grid.Row="1"
+                    Grid.Column="0">
+            <Button Content="+" Command="{Binding IncrementNumberCommand}"/>
+            <Button Content="-" Command="{Binding DecrementNumberCommand}"/>
+            <Button Content="Remove Number" Command="{Binding RemoveNumberCommand}"/>
+            <TextBlock Text="{Binding Progress}"/>
+            <TextBlock Text="-"/>
+            <Button Content="Up Number" Command="{Binding UpCommand}"/>
+            <Button Content="Down Number" Command="{Binding DownCommand}"/>
+            <TextBlock Text="-"/>
+            <Button Content="Show in Explorer" Command="{Binding ShowInExplorer}"/>
+            <TextBlock Text="-"/>
+            <Button Content="Scroll to selected" Click="Button_Click"/>
+        </StackPanel>
+
+        <DataGrid Grid.Row="1"
+                 Grid.Column="1"
+                 ItemsSource="{Binding FileItems}"
+                 SelectedItem="{Binding SelectedItem}"
+                  Name="_dataGrid">
+
+        </DataGrid>
+
+
+
     </Grid>
 </Window>

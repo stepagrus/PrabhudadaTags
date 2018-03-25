@@ -24,5 +24,11 @@ namespace Tagger
         {
             InitializeComponent();
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            if (_dataGrid.SelectedItem != null)
+                _dataGrid.ScrollIntoView(_dataGrid.SelectedItem);
+        }
     }
 }
