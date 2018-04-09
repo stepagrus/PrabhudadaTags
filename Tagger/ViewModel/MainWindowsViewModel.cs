@@ -20,89 +20,81 @@ namespace Tagger.ViewModel
         }
 
         public ObservableCollection<FileTemplate> FileItems { get; private set; }
-        public FileTemplate SelectedItem { get; set; }
+        public FileTemplate SelectedItem
+        {
+            get => _selectedItem;
+            set
+            {
+                _selectedItem = value;
+                RaisePropertyChanged(nameof(UpCommand));
+                RaisePropertyChanged(nameof(DownCommand));
+            }
+        }
+
         public string Progress { get; private set; }
 
         public ICommand OpenFolderCommand => new RelayCommand(ShowDialog);
         public ICommand DecrementNumberCommand => new RelayCommand(DecrementNumber);
         public ICommand IncrementNumberCommand => new RelayCommand(IncrementNumber);
         public ICommand RemoveNumberCommand => new RelayCommand(RemoveNumber);
-        public ICommand UpCommand => new RelayCommand(UpNumber);
-        public ICommand DownCommand => new RelayCommand(DownNumber);
+        public ICommand UpCommand => new RelayCommand(IncNumber, HasSelectedItem);
+        public ICommand DownCommand => new RelayCommand(DecNumber, HasSelectedItem);
         public ICommand ShowInExplorer => new RelayCommand(() => System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("explorer.exe", " /select, " + SelectedItem.GetSourcePath())));
 
-        private void UpNumber()
+        private void IncNumber()
         {
-            //получить выбранный объект
-            //получить дату у выбранного объекта
-            //выбрать все объекты с такой же датой
-            //у группы объектов получить номер
-            //если выьранный объект имеет номер 1, то 
-            //  убрать номер вообще
-            //  у остальный объектов в группе понизить номер на 1
-            // если выбранный номер больше 1, то
-            //  если предыдущего объекта нет, то ничего не делать
-            //  обменять номера у выбранного объекта и предыдущего
-            //  
 
-            var group = FileItems.Where(o => o.Date == SelectedItem.Date).OrderBy(o => o.Number);
+            if (String.IsNullOrEmpty(SelectedItem.Number))
+                return;
+
+            var groupByDate = FileItems.Where(o => o.Date == SelectedItem.Date).OrderBy(o => o.Number);
             if (SelectedItem.Number == "#1")
             {
-                foreach (var item in group)
+                foreach (var fileItem in groupByDate)
                 {
-                    if (item == SelectedItem)
+                    if (fileItem == SelectedItem)
                     {
-                        item.RemoveNumber();
+                        fileItem.RemoveNumber();
                         continue;
                     }
                     else
                     {
-                        item.DecNumber();
+                        fileItem.DecNumber();
                     }
-
                 }
             }
-            else if (!String.IsNullOrEmpty(SelectedItem.Number))
+            else
             {
-                int count = group.Count();
+                int count = groupByDate.Count();
                 for (int i = 0; i < count; i++)
                 {
                     bool hasPrevous = i > 0;
-                    if (group.ElementAt(i) == SelectedItem && hasPrevous)
+                    if (groupByDate.ElementAt(i) == SelectedItem && hasPrevous)
                     {
-                        //exchange
-                        var previous = group.ElementAt(i - 1);
+                        var previous = groupByDate.ElementAt(i - 1);
                         var current = SelectedItem;
                         SwapNumbers(ref current, ref previous);
                     }
                 }
             }
-
         }
 
-        private void DownNumber()
+        private void DecNumber()
         {
-            //получить выбранный объект
-            //получить дату у выбранного объекта
-            //выбрать все объекты с такой же датой
-            //у группы объектов получить номер
-            //если после выбранного объекта имеется следующий, то 
-            //  обменять их номера местами
-            var group = FileItems.Where(o => o.Date == SelectedItem.Date).OrderBy(o => o.Number);
-            int count = group.Count();
+            var groupByDate = FileItems.Where(o => o.Date == SelectedItem.Date).OrderBy(o => o.Number);
+            int count = groupByDate.Count();
 
             for (int i = 0; i < count; i++)
             {
                 bool hasNext = i < count - 1;
-                var current = group.ElementAt(i);
+                var current = groupByDate.ElementAt(i);
 
                 if (current == SelectedItem && hasNext)
                 {
-                    var next = group.ElementAt(i + 1);
+                    var next = groupByDate.ElementAt(i + 1);
                     SwapNumbers(ref current, ref next);
                     break;
                 }
-
             }
         }
 
@@ -167,10 +159,13 @@ namespace Tagger.ViewModel
             SelectedItem?.RemoveNumber();
         }
 
+        private bool HasSelectedItem()
+        {
+            return SelectedItem != null;
+        }
+
         private string _path;
+        private FileTemplate _selectedItem;
     }
-
-
-
 }
 

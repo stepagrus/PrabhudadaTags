@@ -11,7 +11,7 @@ namespace Tagger.Model
 
         public string Filename
         {
-            get => _assembler.Assemble();
+            get => _assembler?.Assemble() ?? String.Empty;
             set
             {
                 bool isNew = _assembler == null;

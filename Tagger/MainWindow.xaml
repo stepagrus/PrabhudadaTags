@@ -34,8 +34,8 @@
             <Button Content="Remove Number" Command="{Binding RemoveNumberCommand}"/>
             <TextBlock Text="{Binding Progress}"/>
             <TextBlock Text="-"/>
-            <Button Content="Up Number" Command="{Binding UpCommand}"/>
-            <Button Content="Down Number" Command="{Binding DownCommand}"/>
+            <Button Content="Dec Number" Command="{Binding UpCommand}"/>
+            <Button Content="Inc Number" Command="{Binding DownCommand}"/>
             <TextBlock Text="-"/>
             <Button Content="Show in Explorer" Command="{Binding ShowInExplorer}"/>
             <TextBlock Text="-"/>
