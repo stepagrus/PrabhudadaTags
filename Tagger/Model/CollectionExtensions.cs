@@ -8,7 +8,7 @@ namespace Tagger.Model
 {
     public static class CollectionExtensions
     {
-        public static T[] SliceToEnd<T>(this T[] sourceArray, int startIndex)
+        public static T[] GetSubArrayStartAt<T>(this T[] sourceArray, int startIndex)
         {
             int len = sourceArray.Length - startIndex;
             T[] resultArray = new T[len];

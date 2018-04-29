@@ -47,7 +47,11 @@
                  ItemsSource="{Binding FileItems}"
                  SelectedItem="{Binding SelectedItem}"
                   Name="_dataGrid">
-
+            <DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Play" Command="{Binding PlayCommand}"/>
+                </ContextMenu>
+            </DataGrid.ContextMenu>
         </DataGrid>
 
 

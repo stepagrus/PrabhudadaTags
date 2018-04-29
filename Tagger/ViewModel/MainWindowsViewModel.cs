@@ -33,13 +33,14 @@ namespace Tagger.ViewModel
 
         public string Progress { get; private set; }
 
-        public ICommand OpenFolderCommand => new RelayCommand(ShowDialog);
+        public ICommand OpenFolderCommand => new RelayCommand(OpenFolderWithFiles);
         public ICommand DecrementNumberCommand => new RelayCommand(DecrementNumber);
         public ICommand IncrementNumberCommand => new RelayCommand(IncrementNumber);
         public ICommand RemoveNumberCommand => new RelayCommand(RemoveNumber);
         public ICommand UpCommand => new RelayCommand(IncNumber, HasSelectedItem);
         public ICommand DownCommand => new RelayCommand(DecNumber, HasSelectedItem);
-        public ICommand ShowInExplorer => new RelayCommand(() => System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("explorer.exe", " /select, " + SelectedItem.GetSourcePath())));
+        public ICommand ShowInExplorer => new RelayCommand(() => System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("explorer.exe", " /select, " + SelectedItem.SourcePath)));
+        public ICommand PlayCommand => new RelayCommand(() => System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(SelectedItem.SourcePath)));
 
         private void IncNumber()
         {
@@ -105,7 +106,7 @@ namespace Tagger.ViewModel
             b.Number = t;
         }
 
-        private void ShowDialog()
+        private void OpenFolderWithFiles()
         {
             using (System.Windows.Forms.FolderBrowserDialog folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog())
             {
@@ -124,7 +125,6 @@ namespace Tagger.ViewModel
             fileService.NewFileParsed += OnNewFileParsed;
             fileService.ProgressUpdated += OnProgressUpdated;
             Task.Run(() => fileService.StartGettingFilesDescriptors());
-
         }
 
         private void OnProgressUpdated(object sender, string e)

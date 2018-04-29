@@ -26,9 +26,7 @@ namespace Tagger.Model
             {
                 var filePath = files[i];
 
-                FileTemplate item = new FileTemplate();
-                item.SourcePath = filePath;
-                item.Filename = Path.GetFileNameWithoutExtension(filePath);
+                FileTemplate item = new FileTemplate(filePath);
                 item.Mp3Length = GetMp3Length(filePath);
 
                 NewFileParsed?.Invoke(this, item);
@@ -38,7 +36,7 @@ namespace Tagger.Model
 
         public static void ReneameFile(FileTemplate template)
         {
-            var sourcePath = template.GetSourcePath();
+            var sourcePath = template.SourcePath;
             var sourceDir = Path.GetDirectoryName(sourcePath);
             var newFileName = template.Filename + ".mp3";
 

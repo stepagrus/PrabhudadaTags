@@ -4,65 +4,61 @@ using System.ComponentModel;
 
 namespace Tagger.Model
 {
-    public class FileTemplate : ViewModelBase
+    public class FileTemplate : ObservableObject
     {
+        public FileTemplate(string sourcePath)
+        {
+            SourcePath = sourcePath;
+            ParentDir = System.IO.Path.GetDirectoryName(sourcePath);
 
-        public string GetSourcePath() => SourcePath;
+            var fileName = System.IO.Path.GetFileNameWithoutExtension(sourcePath);
+            _assembler = new FilenameAssembler(fileName);
+        }
 
         public string Filename
         {
-            get => _assembler?.Assemble() ?? String.Empty;
+            get => _assembler.FileName;
             set
             {
-                bool isNew = _assembler == null;
-                bool isUpdate = !isNew && _assembler?.Assemble() != value;
-
-
-
-                if (isNew)
+                if (_assembler.FileName != value)
                 {
-                    _assembler = FilenameAssembler.Disassemble(value);
-                    _assembler.PropertyChanged += RaiseChanged;
-                }
-                else if (isUpdate)
-                {
-                    _assembler = FilenameAssembler.Disassemble(value);
-                    _assembler.PropertyChanged += RaiseChanged;
-                    RaisePropertyChanged(nameof(Filename));
+                    _assembler.FileName = value;
+                    NameChanged();
                 }
             }
         }
 
-        private void RaiseChanged(object sender, PropertyChangedEventArgs e)
-        {
-            RaisePropertyChanged(nameof(Filename));
-            RaisePropertyChanged(nameof(Number));
+        internal string SourcePath { get; set; }
 
-            PrabhupadaFileService.ReneameFile(this);
+        internal string ParentDir { get; }
 
-        }
-
-        public string SourcePath { private get; set; }
         public TimeSpan Mp3Length { get; set; }
 
         public string Number
         {
-            get => Assembler.Number;
-            set => Assembler.Number = value;
+            get => _assembler.Number;
+            set
+            {
+                if (_assembler.Number != value)
+                {
+                    _assembler.Number = value;
+                    NameChanged();
+                }
+            }
         }
 
         public string Date
         {
-            get => Assembler.Date;
-            private set => Assembler.Date = value;
+            get => _assembler.Date;
+            private set
+            {
+                if (_assembler.Date != value)
+                {
+                    _assembler.Date = value;
+                    NameChanged();
+                }
+            }
         }
-
-        public FilenameAssembler Assembler
-        {
-            get => _assembler;
-        }
-
-
 
         public void IncNumber()
         {
@@ -79,9 +75,16 @@ namespace Tagger.Model
                 _assembler.Number = String.Empty;
         }
 
-        FilenameAssembler _assembler;
+        private void NameChanged()
+        {
+            RaisePropertyChanged(nameof(Filename));
+            RaisePropertyChanged(nameof(Number));
+            RaisePropertyChanged(nameof(Date));
+
+            PrabhupadaFileService.ReneameFile(this);
+        }
+
+        private FilenameAssembler _assembler;
     }
-
-
-
 }
+
