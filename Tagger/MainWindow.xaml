@@ -43,9 +43,9 @@
         </StackPanel>
 
         <DataGrid Grid.Row="1"
-                 Grid.Column="1"
-                 ItemsSource="{Binding FileItems}"
-                 SelectedItem="{Binding SelectedItem}"
+                  Grid.Column="1"
+                  ItemsSource="{Binding FileItems}"
+                  SelectedItem="{Binding SelectedItem}"
                   Name="_dataGrid">
             <DataGrid.ContextMenu>
                 <ContextMenu>

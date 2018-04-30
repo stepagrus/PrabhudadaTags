@@ -30,7 +30,7 @@ namespace Tagger.Model
 
         internal string SourcePath { get; set; }
 
-        internal string ParentDir { get; }
+        public string ParentDir { get; }
 
         public TimeSpan Mp3Length { get; set; }
 
