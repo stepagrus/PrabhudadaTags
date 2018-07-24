@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace Tagger.Model
 {
-    public static class CollectionExtensions
+  public static class CollectionExtensions
+  {
+    public static T[] GetSubArrayStartAt<T>(this T[] sourceArray, int startIndex)
     {
-        public static T[] GetSubArrayStartAt<T>(this T[] sourceArray, int startIndex)
-        {
-            int len = sourceArray.Length - startIndex;
-            T[] resultArray = new T[len];
-            Array.Copy(sourceArray, startIndex, resultArray, 0, len);
-            return resultArray;
-        }
+      int len = sourceArray.Length - startIndex;
+      T[] resultArray = new T[len];
+      Array.Copy(sourceArray, startIndex, resultArray, 0, len);
+      return resultArray;
     }
+  }
 }
